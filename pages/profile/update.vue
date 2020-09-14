@@ -49,6 +49,10 @@
   import VWidget from '@/components/VWidget';
   import ProfileForm from '@/components/widgets/form/ProfileForm';
   import OwnerInfoForm from '@/components/widgets/form/OwnerInfoForm';
+  import CompanyForm from '@/components/widgets/form/CompanyForm';
+  import PickupPaymentForm from '@/components/widgets/form/PickupPaymentForm';
+  import BankAccountForm from '@/components/widgets/form/BankAccountForm';
+  import OthersAccountForm from '@/components/widgets/form/OthersAccountForm';
 
   export default {
     layout: "dashboard",
@@ -56,16 +60,20 @@
       VWidget,
       ProfileForm,
       OwnerInfoForm,
+      CompanyForm,
+      PickupPaymentForm,
+      BankAccountForm,
+      OthersAccountForm,
     },
     data() {
       return {
         tab: null,
         tabItems: [
           {'tab': 'Owner Information', 'component': 'OwnerInfoForm'},
-          {'tab': 'Company Information', 'component': 'ProfileForm'},
-          {'tab': 'Pickup & Payment', 'component': 'ProfileForm'},
-          {'tab': 'Bank Account', 'component': 'ProfileForm'},
-          {'tab': 'Other Account', 'component': 'ProfileForm'},
+          {'tab': 'Company Information', 'component': 'CompanyForm'},
+          {'tab': 'Pickup & Payment', 'component': 'PickupPaymentForm'},
+          {'tab': 'Bank Account', 'component': 'BankAccountForm'},
+          {'tab': 'Other Account', 'component': 'OthersAccountForm'},
         ],
       };
     },

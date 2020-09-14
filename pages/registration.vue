@@ -9,26 +9,24 @@
                 <div class="layout column align-center">
                   <!-- <img src="../static/m.png" alt="Enexpress" width="120" height="120"> -->
                   <h1 class="flex primary--text">Enexpress</h1>
-                  <h4 class="flex mb-4 primary--text">Merchant Login</h4>
+                  <h4 class="flex mb-4 primary--text">Merchant Registration</h4>
                 </div>
                 <v-form>
-                  <v-text-field
-                    append-icon="person"
-                    name="login"
-                    label="Email"
-                    type="text"
-                    v-model="modelForm.email"
-                    :rules="[rules.required, rules.email]"
-                  ></v-text-field>
-                  <v-text-field
-                    append-icon="lock"
-                    name="password"
-                    label="Password"
-                    id="password"
-                    type="password"
-                    v-model="modelForm.password"
+                  <v-text-field name="name" label="Name" type="text"
                     :rules="[rules.required]"
-                  ></v-text-field>
+                                v-model="formModel.name"></v-text-field>
+                  <v-text-field name="phone" label="Phone" type="text"
+                    :rules="[rules.required, rules.phone]"
+                                v-model="formModel.phone"></v-text-field>
+                  <v-text-field name="email" label="Email" type="text"
+                    :rules="[rules.required, rules.email]"
+                                v-model="formModel.email"></v-text-field>
+                  <v-text-field name="password" label="Password" id="password" type="password"
+                    :rules="[rules.required]"
+                                v-model="formModel.password"></v-text-field>
+                  <v-text-field name="confirm_password" label="Password" id="password" type="password"
+                    :rules="[rules.required]"
+                                v-model="formModel.confirm_password"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -36,10 +34,10 @@
                   Register
                 </v-btn> -->
                 <!-- <v-spacer></v-spacer> -->
-                <v-btn large block color="primary" @click="login" :loading="loading">Login</v-btn>
+                <v-btn large block color="primary" @click="submit" :loading="loading">Registration</v-btn>
               </v-card-actions>
               <v-card-text>
-                  Don't have an account? <router-link class="routerLink font-weight-bold" to="/registration">Signup</router-link>
+                  Already have an account? <router-link class="routerLink font-weight-bold" to="/login">Login</router-link>
                 </v-card-text>
             </v-card>
           </v-flex>
@@ -54,7 +52,7 @@
     layout: 'default',
     data: () => ({
       loading: false,
-      modelForm: {},
+      formModel: {},
       rules: {
         required: value => !!value || 'This field is required.',
         phone: value => value && value.length <= 11 || 'Max 11 characters',
@@ -66,10 +64,10 @@
     }),
 
     methods: {
-      login() {
+      submit() {
         this.loading = true;
         setTimeout(() => {
-          this.$router.push('/dashboard');
+          this.$router.push('/login');
         }, 1000);
       }
     }

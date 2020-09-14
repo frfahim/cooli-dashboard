@@ -1,32 +1,50 @@
 <template>
   <v-card ref="form">
     <v-card-text>
-      <v-text-field
-        label="Name"
-        placeholder="John Doe"
-        v-model="formModel.name"
+      <v-select
+        autocomplete
+        label="Bank"
+        placeholder="Select..."
+        :rules="[rules.required]"
+        :items="banks"
+        v-model="formModel.bank_name"
+        ref="bank_name"
         required
-        ref="name"
+      ></v-select>
+      <v-text-field
+        label="Branch"
+        placeholder=""
+        v-model="formModel.branch"
         :rules="[rules.required]"
         :error-messages="errorMessages"
       ></v-text-field>
       <v-text-field
-        label="Email"
-        placeholder="jondoe@example.com"
-        name="email"
-        v-model="formModel.email"
-        :rules="[rules.required, rules.email]"
+        label="Routing No."
+        placeholder=""
+        v-model="formModel.routing_number"
+        :rules="[rules.required]"
         :error-messages="errorMessages"
-        required
       ></v-text-field>
       <v-text-field
-        label="Phone"
-        placeholder="01712000000"
-        :rules="[rules.required, rules.phone]"
+        label="A/C Type"
+        placeholder=""
+        v-model="formModel.account_type"
+        :rules="[rules.required]"
         :error-messages="errorMessages"
-        v-model="formModel.phone"
-        type="number"
-        required
+      ></v-text-field>
+      <v-text-field
+        label="A/C Holder Name"
+        placeholder=""
+        v-model="formModel.account_holder_name"
+        :rules="[rules.required]"
+        :error-messages="errorMessages"
+      ></v-text-field>
+      <v-text-field
+        label="A/C No."
+        placeholder=""
+        v-model="formModel.account_number"
+        :rules="[rules.required]"
+        :error-messages="errorMessages"
       ></v-text-field>
     </v-card-text>
     <!-- <v-divider class="mt-5"></v-divider> -->
@@ -34,20 +52,6 @@
       <v-btn flat>Cancel</v-btn>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
-        <v-tooltip
-          left
-          v-if="formHasErrors"
-        >
-          <v-btn
-            icon
-            @click="resetForm"
-            slot="activator"
-            class="my-0"
-          >
-            <v-icon>refresh</v-icon>
-          </v-btn>
-          <span>Refresh form</span>
-        </v-tooltip>
       </v-slide-x-reverse-transition>
       <v-btn color="primary" flat @click="submit">Submit</v-btn>
     </v-card-actions>
@@ -65,12 +69,8 @@ export default {
     formModel: {},
     rules: {
       required: value => !!value || 'This field is required.',
-      phone: value => value && value.length <= 11 || 'Max 11 characters',
-      email: value => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        return pattern.test(value) || 'Invalid e-mail.'
-      },
     },
+    banks: ['UCB', 'Bank Asia', 'EBL']
   }),
 
   // computed: {
@@ -90,14 +90,6 @@ export default {
   },
 
   methods: {
-    resetForm () {
-      this.errorMessages = [];
-      this.formHasErrors = false;
-
-      Object.keys(this.form).forEach(f => {
-        this.$refs[f].reset();
-      });
-    },
     submit () {
       this.formHasErrors = false;
       Object.keys(this.form).forEach(f => {

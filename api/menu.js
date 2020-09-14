@@ -8,6 +8,17 @@ const Menu = [
     href: '/dashboard'
   },
   {
+    title: 'Parcel',
+    group: 'parcel',
+    component: 'parcel',
+    icon: 'card_travel',
+    items: [
+      { name: 'addParcel', title: 'Add Parcel', href: '/parcel/add-parcel'},
+      {name: 'parcelList', title: 'Parcel List', href: '/parcel/list'},
+
+    ]
+  },
+  {
     title: 'Profile',
     group: 'apps',
     icon: 'account_circle',
