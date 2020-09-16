@@ -4,10 +4,11 @@
 
 <script>
     export default {
-        mounted()
-        {
-          this.$router.push('/dashboard')
-        }
+      middleware: ['auth'],
+      mounted()
+      {
+        this.$router.push('/dashboard')
+      }
     }
 </script>
 

@@ -218,6 +218,7 @@
 
   export default {
     layout: 'dashboard',
+    middleware: ['auth'],
     components: {
       VWidget,
       MiniStatistic,

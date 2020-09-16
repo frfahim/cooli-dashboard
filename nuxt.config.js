@@ -3,6 +3,9 @@ const pkg = require('./package')
 
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
+let baseApiUrl = 'http://localhost:8000/api/v1/'
+
+
 module.exports = {
   mode: 'spa',
 
@@ -52,13 +55,19 @@ module.exports = {
   */
   plugins: [
     '@/plugins/vuetify',
-    '@/plugins/vee-validate'
+    '@/plugins/vee-validate',
+    '@/plugins/axios',
   ],
 
   /*
   ** Nuxt.js modules
   */
-  modules: [],
+  modules: [
+    '@nuxtjs/axios',
+  ],
+  axios: {
+    baseURL: baseApiUrl
+  },
 
   /*
   ** Build configuration
@@ -78,5 +87,14 @@ module.exports = {
     extend(config, ctx) {
 
     }
+  },
+
+  environment: {
+    production: false,
+    baseApiUrl: baseApiUrl,
+    languages: ['en', 'nl'],
+    feDateFormat: 'DD-MM-YYYY',
+    beDateFormat: 'YYYY-MM-DD',
+    accessTokenTimeOffset: 30,
   }
 }

@@ -13,24 +13,29 @@
                 </div>
                 <v-form>
                   <v-text-field
-                    append-icon="person"
                     name="login"
-                    label="Email"
+                    label="Username"
                     type="text"
-                    v-model="modelForm.email"
-                    :rules="[rules.required, rules.email]"
+                    v-model="modelForm.username"
+                    :rules="[rules.required]"
                   ></v-text-field>
                   <v-text-field
-                    append-icon="lock"
                     name="password"
                     label="Password"
                     id="password"
-                    type="password"
+                    :append-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="passwordVisible ? 'text' : 'password'"
+                    @click:append="passwordVisible = !passwordVisible"
                     v-model="modelForm.password"
                     :rules="[rules.required]"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
+              <v-card-actions>
+              <p v-if="wrongCredential" class="routerLink mb-1 text-center">
+                  Wrong username or password!
+              </p>
+              </v-card-actions>
               <v-card-actions>
                 <!-- <v-btn block>
                   Register
@@ -54,6 +59,8 @@
     layout: 'default',
     data: () => ({
       loading: false,
+      wrongCredential: false,
+      passwordVisible: false,
       modelForm: {},
       rules: {
         required: value => !!value || 'This field is required.',
@@ -65,13 +72,24 @@
       },
     }),
 
+    mounted () {
+      this.$store.dispatch('clearUserData')
+    },
+
     methods: {
       login() {
         this.loading = true;
-        setTimeout(() => {
-          this.$router.push('/dashboard');
-        }, 1000);
-      }
+        this.$store.dispatch('loginUser', this.modelForm)
+          .then(res => {
+            this.wrongCredential = false;
+            this.$router.push('/profile');
+            this.loading = false;
+          })
+          .catch( err => {
+            this.wrongCredential = true;
+            this.loading = false;
+          })
+      },
     }
 
   };

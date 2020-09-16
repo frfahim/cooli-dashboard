@@ -102,7 +102,7 @@
         Util.toggleFullScreen();
       },
       handleLogout() {
-        this.$router.push('/login');
+        this.$store.dispatch('logOutUser');
       },
       handleProfile() {
         this.$router.push('/profile')
