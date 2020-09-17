@@ -23,33 +23,63 @@
                   <v-card-text>
                   <v-layout row>
                     <v-flex lg6>
-                      Name
+                      Owner Name
                     </v-flex>
                     <v-flex lg6>
-                      Jhon Doe
+                      {{ userData.name }}
                     </v-flex>
                   </v-layout>
                   </v-card-text>
                   <v-card-text>
                     <v-layout row>
                       <v-flex lg6>
-                        Name
+                        User ID
                       </v-flex>
                       <v-flex lg6>
-                        Jhon Doe
+                        {{ userData.username }}
                       </v-flex>
                     </v-layout>
                   </v-card-text>
                   <v-card-text>
                     <v-layout row>
                       <v-flex lg6>
-                        Name
+                        Phone Number
                       </v-flex>
                       <v-flex lg6>
-                        Jhon Doe
+                        {{ userData.phone }}
                       </v-flex>
                     </v-layout>
                   </v-card-text>
+                  <v-card-text>
+                    <v-layout row>
+                      <v-flex lg6>
+                        Company Name
+                      </v-flex>
+                      <v-flex lg6>
+                        {{customerData.name}}
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+                  <v-card-text>
+                    <v-layout row>
+                      <v-flex lg6>
+                        Address
+                      </v-flex>
+                      <v-flex lg6>
+                        {{customerData.address}}
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+                  <!-- <v-card-text>
+                    <v-layout row>
+                      <v-flex lg6>
+                        Company Name
+                      </v-flex>
+                      <v-flex lg6>
+                        {{customerData.name}}
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text> -->
                 </v-card>
               </template>
             </v-card-text>
@@ -66,16 +96,44 @@
 
   export default {
     layout: 'dashboard',
+    middleware: ['auth'],
     components: {
       VWidget
     },
     data() {
       return {
-        cardText: 'Hey there, I am a very simple card. I am good at containing small bits of information. I am quite convenient because I require little markup to use effectively.'
+        customerData: Object,
+        userData: Object,
+        paymentData: Array
       };
     },
+    created () {
+      this.getMe()
+    },
     computed: {},
-    methods: {}
+    methods: {
+      getMe() {
+        this.$store.commit('setLoading')
+        this.$store.dispatch('users/fetchMe')
+        .then( res => {
+          if ("user" in res) {
+            this.userData = res.user
+            this.customerData = res
+          } else {
+            this.userData = res
+          }
+          if ("payment" in res) {
+            this.paymentData = res.payment
+          }
+          this.$store.commit('removeLoading')
+        })
+        .catch(err => {
+          this.customerData = {}
+          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
+          this.$store.commit('removeLoading')
+        })
+      }
+    }
   };
 </script>
 <style lang="stylus" scoped>

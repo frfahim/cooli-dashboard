@@ -4,17 +4,19 @@
       <v-text-field
         label="bKkash"
         placeholder=""
-        v-model="formModel.bkash"
+        v-model="formModel.phone_number"
+        type="number"
+        :rules="[rules.required, rules.phone]"
         :error-messages="errorMessages"
       ></v-text-field>
     </v-card-text>
     <!-- <v-divider class="mt-5"></v-divider> -->
     <v-card-actions>
-      <v-btn flat>Cancel</v-btn>
+      <v-btn flat to="/profile">Cancel</v-btn>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
       </v-slide-x-reverse-transition>
-      <v-btn color="primary" flat @click="submit">Submit</v-btn>
+      <v-btn color="primary" @click="submit" :loading="loading">Submit</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -23,38 +25,83 @@
 export default {
   data: () => ({
     errorMessages: [],
-    // name: null,
-    // email: null,
-    // phone: null,
+    loading: false,
+    loading: false,
     formHasErrors: false,
     formModel: {},
+    rules: {
+      required: value => !!value || 'This field is required.',
+      phone: value => value && value.length <= 11 || 'Max 11 characters',
+    },
   }),
-
-  // computed: {
-  //   form () {
-  //     return {
-  //       name: this.name,
-  //       email: this.email,
-  //       phone: this.phone,
-  //     };
+  // props: {
+  //   currentTab: {
+  //     name: {
+  //     type: Number,
+  //     default: ''
+  //   },
   //   }
   // },
 
-  watch: {
-    name () {
-      this.errorMessages = [];
-    }
+  mounted () {
+    this.getBankInfo()
   },
 
   methods: {
-    submit () {
-      this.formHasErrors = false;
-      Object.keys(this.form).forEach(f => {
-        if (!this.form[f]) this.formHasErrors = true;
+      getBankInfo () {
+        this.loading = true
+        this.$store.commit('setLoading')
+        this.$store.dispatch('users/fetchBankInfo', {'payment_option': 'bkash'})
+        .then( res => {
+          this.formModel = res.data
+          this.$store.commit('removeLoading')
+          this.loading = false
+          console.log("gettt",this.formModel);
+        })
+        .catch(err => {
+          this.formModel = {}
+          this.$store.commit('removeLoading')
+          this.loading = false
+          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
+        })
+      },
 
-        this.$refs[f].validate(true);
-      });
+      submit () {
+        this.loading = true
+        this.$store.commit('setLoading')
+        this.formHasErrors = false;
+        let payload = {
+          'payment_option': 'bkash',
+          'phone_number': this.formModel.phone_number,
+        }
+        console.log(this.formModel);
+        Object.keys(payload).forEach(f => {
+          console.log(f)
+          if (!payload[f]) this.formHasErrors = true;
+        });
+        if (this.formHasErrors) {
+          this.loading = false
+          this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+          return
+        }
+
+
+        this.$store.dispatch(
+          'users/updateBankInfo', payload
+        ).then(res => {
+          this.$store.commit('removeLoading')
+          this.loading = false
+          this.$store.dispatch('setNotification', {type: 'success', msg: 'Updated'});
+          // this.$router.push('/profile/update/')
+          // this.$emit('update:currentTab', 2)
+        }).catch(error =>{
+          this.$store.commit('removeLoading')
+          this.loading = false
+          this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+        })
+      },
     }
-  }
+
+
 };
 </script>

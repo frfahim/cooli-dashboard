@@ -29,8 +29,8 @@
   import OrderForm from '@/components/widgets/form/OrderForm';
 
   export default {
-    layout: "dashboard",
-    middleware: ['auth'],
+    layout: "order-layout",
+    middleware: [],
     components: {
       VWidget,
       MerchantOrderForm,

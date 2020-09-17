@@ -51,6 +51,16 @@ export const mutations = {
 }
 
 export const actions = {
+  async registerUser(vuexContext, payload) {
+    return await this.$axios
+      .$post(`/users/auth/registration/`, payload)
+      .then(res => {
+        return res;
+      })
+      .catch(error => {
+        throw new Error(err);
+      });
+  },
   loginUser(vuexContext, authData) {
     return this.$axios.$post(
       "users/auth/login/",
@@ -63,6 +73,7 @@ export const actions = {
       localStorage.setItem("User", JSON.stringify(result.data.user))
       localStorage.setItem("UserToken", `JWT ${result.data.access_token}`)
       localStorage.setItem("UserRefreshToken", `${result.data.refresh_token}`)
+      vuexContext.dispatch("users/fetchMe")
       return result
     }).catch(e => {
       throw new Error(e)
@@ -84,10 +95,19 @@ export const actions = {
     localStorage.removeItem("UserToken");
     localStorage.removeItem("TokenExpiration");
     localStorage.removeItem("UserRefreshToken");
+    localStorage.removeItem("meData");
     vuexContext.commit("clearUserTokens");
     this.$router.push('/login');
   },
-  setNotificaation(vuexContext, notification) {
+  clearAllData(vuexContext) {
+    localStorage.removeItem("User");
+    localStorage.removeItem("UserToken");
+    localStorage.removeItem("TokenExpiration");
+    localStorage.removeItem("UserRefreshToken");
+    localStorage.removeItem("meData");
+    vuexContext.commit("clearUserTokens");
+  },
+  setNotification(vuexContext, notification) {
     vuexContext.commit("setNotification", notification)
     setTimeout(() => {
       vuexContext.commit("removeNotification")

@@ -16,17 +16,21 @@
       <template>
         <v-data-table
           :headers="headers"
-          :items="items"
+          :items="orderList"
           hide-actions
           class="elevation-0 table-striped"
         >
           <template slot="items" slot-scope="props">
-            <td>{{ props.item.id }}</td>
-            <td class="text-xs-left">{{ props.item.product }}</td>
-            <td class="text-xs-left">{{ props.item.price }}</td>
-            <td class="text-xs-left">Jhon Doe</td>
-            <td class="text-xs-left">01712000000</td>
-            <td class="text-xs-left"><v-chip label small :color="getColorByStatus(props.item.status)" text-color="white" >{{ props.item.status }}</v-chip></td>
+            <td>{{ props.item.reference }}</td>
+            <td class="text-xs-left">{{ props.item.receiver_name }}</td>
+            <td class="text-xs-left">{{ props.item.receiver_phone }}</td>
+            <td class="text-xs-left">{{ props.item.cash_amount }}</td>
+            <td class="text-xs-left">{{ props.item.total_amount }}</td>
+            <td class="text-xs-left">
+              <v-chip label small :color="getColorByStatus(props.item.status)" text-color="white" >
+                {{ props.item.status }}
+              </v-chip>
+            </td>
             <td class="text-xs-right">
               <v-btn flat icon color="grey">
                 <v-icon>edit</v-icon>
@@ -52,6 +56,7 @@
 
   export default {
     layout: "dashboard",
+    middleware: ['auth'],
     components: {
     },
     data() {
@@ -63,21 +68,25 @@
                 sortable: false,
                 value: 'id'
             },
-            { text: 'Invoice No', value: 'invoice' },
-            { text: 'Amount', value: 'amount' },
-            { text: 'Recipient Name', value: 'recipient_name' },
-            { text: 'Phone', value: 'phone' },
+            { text: 'Receiver Name', value: 'receiver_name' },
+            { text: 'Receiver Phone', value: 'receiver_phone' },
+            { text: 'Cash Amount', value: 'cash_amount' },
+            { text: 'Total Amount', value: 'total_amount' },
             { text: 'Status', value: 'status' },
             { text: 'Action', value: 'action', align: 'right' },
 
         ],
-        items: items,
+        orderList: [],
         colors: {
             processing: 'blue',
             sent: 'red',
             delivered: 'green'
         }
       };
+    },
+
+    mounted () {
+      this.getOrderList()
     },
     methods: {
       handleClick: (e) => {
@@ -86,6 +95,19 @@
       getColorByStatus (status) {
         return this.colors[status];
       },
+      getOrderList () {
+        this.$store.commit('setLoading')
+        this.$store.dispatch('orders/fetchOrderList')
+        .then( res => {
+          this.orderList = res.results
+          this.$store.commit('removeLoading')
+        })
+        .catch(err => {
+          this.orderList = []
+          this.$store.dispatch('setNotificaation', {type: 'error', msg: 'Some thing wrong'});
+          this.$store.commit('removeLoading')
+        })
+      }
     },
 
   };

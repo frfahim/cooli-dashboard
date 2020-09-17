@@ -4,7 +4,7 @@
 
 <script>
     export default {
-      middleware: ['auth'],
+      // middleware: ['auth'],
       mounted()
       {
         this.$router.push('/dashboard')

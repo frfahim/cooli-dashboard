@@ -21,14 +21,19 @@
                   <v-text-field name="email" label="Email" type="text"
                     :rules="[rules.required, rules.email]"
                                 v-model="formModel.email"></v-text-field>
-                  <v-text-field name="password" label="Password" id="password" type="password"
+                  <v-text-field name="password1" label="Password" id="password1" type="password"
                     :rules="[rules.required]"
-                                v-model="formModel.password"></v-text-field>
-                  <v-text-field name="confirm_password" label="Password" id="password" type="password"
+                                v-model="formModel.password1"></v-text-field>
+                  <v-text-field name="password2" label="Password" id="password2" type="password"
                     :rules="[rules.required]"
-                                v-model="formModel.confirm_password"></v-text-field>
+                                v-model="formModel.password2"></v-text-field>
                 </v-form>
               </v-card-text>
+              <v-card-actions>
+                <p v-if="passwordNotMatched" class="routerLink mb-1 text-center">
+                    Password not mached
+                </p>
+              </v-card-actions>
               <v-card-actions>
                 <!-- <v-btn block>
                   Register
@@ -52,6 +57,7 @@
     layout: 'default',
     data: () => ({
       loading: false,
+      passwordNotMatched: false,
       formModel: {},
       rules: {
         required: value => !!value || 'This field is required.',
@@ -63,13 +69,26 @@
       },
     }),
 
+    mounted () {
+      this.$store.dispatch('clearAllData')
+    },
+
     methods: {
-      submit() {
+      submit () {
         this.loading = true;
-        setTimeout(() => {
-          this.$router.push('/login');
-        }, 1000);
-      }
+        this.$store.dispatch('registerUser', this.formModel)
+          .then(res => {
+            this.loading = false;
+            this.$store.commit('removeLoading')
+            this.$store.dispatch('setNotification', {type: 'success', msg: 'Account Created'});
+            this.$router.push('/login');
+          })
+          .catch( err => {
+            this.$store.commit('removeLoading')
+            this.loading = false
+            this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+          })
+      },
     }
 
   };

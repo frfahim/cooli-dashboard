@@ -82,7 +82,12 @@
         this.$store.dispatch('loginUser', this.modelForm)
           .then(res => {
             this.wrongCredential = false;
-            this.$router.push('/profile');
+            console.log(res.data.user);
+            if (res.data.user.is_verified) {
+              this.$router.push('/parcel/list');
+            } else {
+              this.$router.push('/profile');
+            }
             this.loading = false;
           })
           .catch( err => {

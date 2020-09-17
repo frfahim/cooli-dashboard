@@ -92,7 +92,7 @@
           </v-widget>
         </v-flex>
         <!-- social/weather card start -->
-        <v-flex lg4 sm12 xs12>
+        <!-- <v-flex lg4 sm12 xs12>
           <profile-card>
           </profile-card>
         </v-flex>
@@ -118,9 +118,9 @@
                      type="area"
           >
           </box-chart>
-        </v-flex>
+        </v-flex> -->
         <!-- statistic section -->
-        <v-flex lg4 sm12 xs12>
+        <!-- <v-flex lg4 sm12 xs12>
           <linear-statistic
             title="Sales"
             sub-title="Sales increase"
@@ -153,9 +153,9 @@
                             :value="25"
           >
           </linear-statistic>
-        </v-flex>
+        </v-flex> -->
         <!-- Circle statistic -->
-        <v-flex lg4 sm12 xs12 v-for="(item,index) in trending" :key="'c-trending'+index">
+        <!-- <v-flex lg4 sm12 xs12 v-for="(item,index) in trending" :key="'c-trending'+index">
           <circle-statistic
             :title="item.subheading"
             :sub-title="item.headline"
@@ -170,6 +170,7 @@
         <!-- <v-flex lg6 sm12 xs12>
           <chat-window height="308px"></chat-window>
         </v-flex> -->
+        <!--
         <v-flex lg6 sm12 xs12>
           <v-widget title="Activities" contentBg="white">
             <div slot="widget-content">
@@ -192,7 +193,7 @@
         </v-flex>
         <v-flex lg5 sm12 xs12>
           <plain-table-order></plain-table-order>
-        </v-flex>
+        </v-flex> -->
       </v-layout>
     </v-container>
   </div>

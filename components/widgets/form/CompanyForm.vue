@@ -1,5 +1,8 @@
 <template>
   <v-card ref="form">
+    <!-- <input
+        type="text"
+        :value="this.$store.state.users.meData.name"> -->
     <v-card-text>
       <v-text-field
         label="Name"
@@ -40,7 +43,7 @@
       ></v-text-field>
     </v-card-text>
     <v-card-actions>
-      <v-btn flat>Cancel</v-btn>
+      <v-btn flat to="/profile">Cancel</v-btn>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
         <!-- <v-tooltip
@@ -58,7 +61,7 @@
           <span>Refresh form</span>
         </v-tooltip> -->
       </v-slide-x-reverse-transition>
-      <v-btn color="primary" flat @click="submit">Submit</v-btn>
+      <v-btn color="primary" @click="submit" :loading="loading">Submit</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -68,6 +71,7 @@ export default {
   data: () => ({
     errorMessages: [],
     formHasErrors: false,
+    loading: false,
     formModel: {},
     rules: {
       required: value => !!value || 'This field is required.',
@@ -79,38 +83,73 @@ export default {
     },
   }),
 
-  // computed: {
-  //   form () {
-  //     return {
-  //       name: this.name,
-  //       address: this.address,
-  //       city: this.city,
-  //       state: this.state,
-  //       zip: this.zip,
-  //       country: this.country
-  //     };
-  //   }
-  // },
 
+  mounted () {
+    console.log("company form")
+    // this.getCompanyInfo()
+  },
+
+  created () {
+    this.getCompanyInfo()
+  },
 
   methods: {
-    resetForm () {
-      this.errorMessages = [];
-      this.formHasErrors = false;
-
-      Object.keys(this.formModel).forEach(f => {
-        this.$refs[f].reset();
-      });
-      this.formModel = {}
+    getCompanyInfo () {
+      this.loading = true
+      this.$store.commit('setLoading')
+      this.$store.dispatch('users/fetchMeDetails')
+      .then( res => {
+        this.formModel = res
+        this.$store.commit('removeLoading')
+        this.loading = false
+        console.log("gettt",this.formModel);
+      })
+      .catch(err => {
+        this.formModel = {}
+        this.$store.commit('removeLoading')
+        this.loading = false
+        this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
+      })
     },
-    submit () {
-      this.formHasErrors = false;
-      Object.keys(this.formModel).forEach(f => {
-        if (!this.formModel[f]) this.formHasErrors = true;
 
-        this.$refs[f].validate(true);
+    submit () {
+      this.loading = true
+      this.$store.commit('setLoading')
+      this.formHasErrors = false;
+      let payload = {
+        'name': this.formModel.name,
+        'phone': this.formModel.phone,
+        'phone': this.formModel.phone,
+        'address': this.formModel.address,
+        'website': this.formModel.website,
+        'social_media': this.formModel.social_media,
+      }
+      console.log(this.formModel);
+      ['name', 'phone', 'address'].forEach(f => {
+        console.log(f)
+        if (!payload[f]) this.formHasErrors = true;
       });
-    }
+      if (this.formHasErrors) {
+        this.loading = false
+        this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+        return
+      }
+
+
+      this.$store.dispatch(
+        'users/updateCompanyInfo', payload
+      ).then(res => {
+        this.$store.commit('removeLoading')
+        this.loading = false
+        this.$store.dispatch('setNotification', {type: 'success', msg: 'Catalog Created'});
+        // this.$router.push('/profile/update/')
+      }).catch(error =>{
+        this.$store.commit('removeLoading')
+        this.loading = false
+        this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+      })
+    },
+
   }
 };
 </script>

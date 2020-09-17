@@ -2,7 +2,7 @@
   <div id="page-forms">
     <v-container grid-list-xl fluid>
       <!-- <v-layout row wrap justify-center> -->
-        <v-card>
+        <v-card v-if="Object.keys(meData).length">
           <template v-slot:extension>
             <v-tabs
               v-model="tab"
@@ -16,6 +16,7 @@
               <v-tab
                 v-for="item in tabItems"
                 :key="item.tab"
+                @click="currentTab = item.id"
               >
               {{ item.tab }}
               </v-tab>
@@ -23,17 +24,73 @@
           </template>
 
           <v-tabs-items v-model="tab">
-            <v-tab-item
-              v-for="item in tabItems"
-              :key="item.tab"
-            >
+
+            <!-- User info tab -->
+            <v-tab-item>
             <v-layout row wrap justify-center>
             <v-flex lg6>
               <v-divider class="mt-4"></v-divider>
               <v-card flat>
-                <!-- <v-card-text class=""> -->
-                  <component :is="item.component" />
-                <!-- </v-card-text> -->
+                <div v-if="currentTab === 1">
+                  <OwnerInfoForm/>
+                  <!-- <component :is="item.component" :meData="meData"/> -->
+                </div>
+              </v-card>
+              </v-flex>
+            </v-layout>
+            </v-tab-item>
+
+            <!-- Company info tab-->
+            <v-tab-item>
+            <v-layout row wrap justify-center>
+            <v-flex lg6>
+              <v-divider class="mt-4"></v-divider>
+              <v-card flat>
+                <div v-if="currentTab === 2">
+                  <CompanyForm/>
+                </div>
+              </v-card>
+              </v-flex>
+            </v-layout>
+            </v-tab-item>
+
+            <!-- Pickup payment -->
+            <v-tab-item>
+            <v-layout row wrap justify-center>
+            <v-flex lg6>
+              <v-divider class="mt-4"></v-divider>
+              <v-card flat>
+                <div v-if="currentTab === 3">
+                  <PickupPaymentForm/>
+                </div>
+              </v-card>
+              </v-flex>
+            </v-layout>
+            </v-tab-item>
+
+            <!-- Bank Acount Tab -->
+            <v-tab-item>
+            <v-layout row wrap justify-center>
+            <v-flex lg6>
+              <v-divider class="mt-4"></v-divider>
+              <v-card flat>
+                <div v-if="currentTab === 4">
+                  <BankAccountForm/>
+                </div>
+              </v-card>
+              </v-flex>
+            </v-layout>
+            </v-tab-item>
+
+            <!-- Other Accoun Tab -->
+            <v-tab-item>
+            <v-layout row wrap justify-center>
+            <v-flex lg6>
+              <v-divider class="mt-5"></v-divider>
+              <v-card flat>
+                <div v-if="currentTab === 5">
+                  <OthersAccountForm/>
+                </div>
               </v-card>
               </v-flex>
             </v-layout>
@@ -56,9 +113,10 @@
 
   export default {
     layout: "dashboard",
+    middleware: ['auth'],
     components: {
       VWidget,
-      ProfileForm,
+      // ProfileForm,
       OwnerInfoForm,
       CompanyForm,
       PickupPaymentForm,
@@ -67,17 +125,52 @@
     },
     data() {
       return {
+        currentTab: 1,
+        loading: false,
+        meData: {},
+        // meData: {"uuid":"4cd3fc1d-3f51-49c6-85ea-20048466e1da","name":"Test Company","phone":"0173051321","pickup_phone":"","email":"","address":"Dhaka","pickup_address":"Dhanmondi","payment_method":"bank","withdrawal":"daily","user":{"uuid":"28d8b642-da81-4c61-a27d-73e1e30609d0","username":"admin","phone":"","email":"admin@mail.com","name":""},"website":"","social_media":"","payment":[]},
         tab: null,
         tabItems: [
-          {'tab': 'Owner Information', 'component': 'OwnerInfoForm'},
-          {'tab': 'Company Information', 'component': 'CompanyForm'},
-          {'tab': 'Pickup & Payment', 'component': 'PickupPaymentForm'},
-          {'tab': 'Bank Account', 'component': 'BankAccountForm'},
-          {'tab': 'Other Account', 'component': 'OthersAccountForm'},
+          {'tab': 'Owner Information', 'component': 'OwnerInfoForm', 'id': 1},
+          {'tab': 'Company Information', 'component': 'CompanyForm', 'id': 2},
+          {'tab': 'Pickup & Payment', 'component': 'PickupPaymentForm', 'id': 3},
+          {'tab': 'Bank Account', 'component': 'BankAccountForm', 'id': 4},
+          {'tab': 'Other Account', 'component': 'OthersAccountForm', 'id': 5},
         ],
       };
     },
-    computed: {},
-    methods: {}
+    asyncData (context) {
+      context.store.commit('setLoading')
+      return context.store.dispatch('users/fetchMeDetails')
+      .then( res => {
+        context.store.commit('removeLoading')
+        return {
+            meData: res
+          }
+      })
+      .catch(err => {
+        this.meData = {}
+        this.store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
+        this.store.commit('removeLoading')
+      })
+    },
+    methods: {
+      getMeDetails() {
+        this.loading = true;
+        this.$store.commit('setLoading')
+        this.$store.dispatch('users/fetchMe')
+        .then( res => {
+          this.meData = res
+          this.$store.commit('removeLoading')
+          this.loading = false;
+        })
+        .catch(err => {
+          this.customerData = {}
+          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
+          this.$store.commit('removeLoading')
+          this.loading = false;
+        })
+      }
+    }
   };
 </script>

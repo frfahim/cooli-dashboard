@@ -7,7 +7,7 @@
           <v-text-field
             label="Name"
             placeholder="Jhon Doe"
-            v-model="formModel.name"
+            v-model="formModel.requestor_name"
             :rules="[rules.required]"
             :error-messages="errorMessages"
           ></v-text-field>
@@ -18,7 +18,7 @@
             placeholder="01712000000"
             :rules="[rules.required, rules.phone]"
             :error-messages="errorMessages"
-            v-model="formModel.phone"
+            v-model="formModel.requestor_phone"
             type="number"
             required
           ></v-text-field>
@@ -31,10 +31,12 @@
             label="Pickup Area"
             placeholder="Select..."
             :rules="[rules.required]"
-            :items="nearest_zones"
-            v-model="formModel.pickup_zone"
+            :items="zoneList"
+            v-model="formModel.requestor_zone"
             required
-            ref="formModel.pickup_zone"
+            ref="formModel.requestor_zone"
+            item-value="id"
+            item-text="name"
             :menu-props="{ top: true, }"
           ></v-autocomplete>
         </v-flex>
@@ -42,7 +44,7 @@
           <v-text-field
             label="Pickup Address"
             placeholder=""
-            v-model="formModel.pickup_address"
+            v-model="formModel.requestor_address"
             :rules="[rules.required]"
             :error-messages="errorMessages"
           ></v-text-field>
@@ -145,13 +147,33 @@
         </v-flex>
       </v-layout>
 
-      <v-text-field
-        label="Cash Collection Amount"
-        placeholder=""
-        v-model="formModel.amount"
-        :rules="[rules.required]"
-        :error-messages="errorMessages"
-      ></v-text-field>
+      <v-layout row wrap>
+        <v-flex sm4 lg4>
+          <v-text-field
+            label="Collection Amount"
+            placeholder=""
+            v-model="formModel.cash_amount"
+            :error-messages="errorMessages"
+          ></v-text-field>
+        </v-flex>
+        <v-flex sm4 lg4>
+          <v-text-field
+            label="Product Amount"
+            placeholder=""
+            v-model="formModel.amount"
+            :error-messages="errorMessages"
+          ></v-text-field>
+        </v-flex>
+        <v-flex sm4 lg4>
+          <v-text-field
+            label="Amount With Delivery Charge"
+            placeholder=""
+            v-model="formModel.total_amount"
+            :rules="[rules.required]"
+            :error-messages="errorMessages"
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
 
       <v-subheader class="pa-0 mb-3 mt-3">RECIPIENT INFORMATION</v-subheader>
 
@@ -162,7 +184,7 @@
           <v-text-field
             label="Recipient Name"
             placeholder="Jhon Doe"
-            v-model="formModel.reciient_name"
+            v-model="formModel.receiver_name"
             :rules="[rules.required]"
             :error-messages="errorMessages"
           ></v-text-field>
@@ -173,7 +195,7 @@
             placeholder="01712000000"
             :rules="[rules.required, rules.phone]"
             :error-messages="errorMessages"
-            v-model="formModel.reciient_phone"
+            v-model="formModel.receiver_phone"
             type="number"
             required
           ></v-text-field>
@@ -186,9 +208,11 @@
             label="Delivery Area"
             placeholder="Select..."
             :rules="[rules.required]"
-            :items="nearest_zones"
+            :items="zoneList"
             :menu-props="{ top: true, }"
-            v-model="formModel.delivery_zone"
+            v-model="formModel.receiver_zone"
+            item-value="id"
+            item-text="name"
             required
           ></v-autocomplete>
         </v-flex>
@@ -196,7 +220,7 @@
           <v-text-field
             label="Delivery Address"
             placeholder=""
-            v-model="formModel.delivery_address"
+            v-model="formModel.receiver_address"
             :rules="[rules.required]"
             :error-messages="errorMessages"
           ></v-text-field>
@@ -294,16 +318,67 @@ export default {
       'excepted_delivery_date': null,
       'excepted_delivery_time': null,
     },
+    meData: JSON.parse(localStorage.getItem("meData")),
     rules: {
       required: value => !!value || 'This field is required.',
       phone: value => value && value.length <= 11 || 'Max 11 characters',
     },
-    nearest_zones: ['Dhanmondi', 'Mohammadpur', 'Shyamoli', 'Mirpur'],
+    nearest_zones: [{'id': 1, 'name': 'Dhanmondi'}, {'id': 2, 'name': 'Mohammadpur'}, {'id': 3, 'name': 'Shyamoli'}],
   }),
+  computed:  {
+    getName () {
+      return this.meData.name
+    },
+  },
+  mounted () {
+    const meData = JSON.parse(localStorage.getItem("meData"))
+    if (meData) {
+      this.formModel.requestor_name = meData.name;
+      this.formModel.requestor_phone = meData.phone;
+      this.formModel.requestor_zone = meData.zone;
+      this.formModel.requestor_address = meData.pickup_address;
+    }
+    console.log("mount form", this.formModel);
+  },
+
+  props: {
+    zoneList: {
+      type: Array,
+      required: true
+    },
+  },
 
   methods: {
     submit () {
-      this.formHasErrors = false;
+      console.log(this.formModel)
+      const payload = {}
+      Object.keys(this.formModel).forEach(key => {
+        if (this.formModel[key]) payload[key] = this.formModel[key]
+      })
+      if (typeof payload.requestor_zone === 'object') {
+        payload.requestor_zone = payload.requestor_zone.id
+      }
+      payload['pickup_date'] = `${this.formModel['pickupDate']}T${this.formModel['pickupTime']}`
+      payload['delivery_date'] = `${this.formModel['excepted_delivery_date']}T${this.formModel['excepted_delivery_time']}`
+      console.log(payload);
+
+
+      this.$store.commit('setLoading')
+      this.$store.dispatch(
+        'orders/createOrder', payload
+      ).then(res => {
+        this.$store.commit('removeLoading')
+        this.$store.dispatch('setNotification', {type: 'success', msg: 'Catalog Created'});
+        let token = localStorage.getItem("UserToken")
+        if (token) {
+          this.$router.push('/parcel/list')
+        } else {
+          this.$router.push('/parcel/individual')
+        }
+      }).catch(error =>{
+        this.$store.commit('removeLoading')
+        this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+      })
     }
   }
 };
