@@ -12,7 +12,7 @@
           </div>
           <!-- App Footer -->
           <v-footer height="auto" class="white pa-3 app--footer">
-            <span class="caption">Cooli Express &copy; {{ new Date().getFullYear() }}</span>
+            <span class="caption">Enxpress &copy; {{ new Date().getFullYear() }}</span>
             <v-spacer></v-spacer>
             <span class="caption mr-1">
               Made by

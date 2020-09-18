@@ -3,7 +3,10 @@ const pkg = require('./package')
 
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
-let baseApiUrl = 'http://localhost:8000/api/v1/'
+let devAPI = 'http://localhost:8000/api/v1/';
+let prodAPI = 'http://be.en-xpress.com/api/v1/';
+let development = process.env.NODE_ENV !== 'production';
+let baseApiUrl = development ? devAPI : prodAPI;
 
 
 module.exports = {
@@ -13,7 +16,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Cooli Express',
+    title: 'Enxpress',
     meta: [
       {charset: 'utf-8'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1'},
@@ -89,7 +92,7 @@ module.exports = {
     }
   },
 
-  environment: {
+  env: {
     production: false,
     baseApiUrl: baseApiUrl,
     languages: ['en', 'nl'],
