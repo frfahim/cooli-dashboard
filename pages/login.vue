@@ -7,8 +7,8 @@
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
-                  <!-- <img src="../static/m.png" alt="Enexpress" width="120" height="120"> -->
-                  <h1 class="flex primary--text">Enexpress</h1>
+                  <!-- <img src="../static/m.png" alt="Enxpress" width="120" height="120"> -->
+                  <h1 class="flex primary--text">Enxpress</h1>
                   <h4 class="flex mb-4 primary--text">Merchant Login</h4>
                 </div>
                 <v-form>
