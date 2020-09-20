@@ -51,7 +51,7 @@
         </v-flex>
         <v-flex lg4 sm12>
           <v-card>
-            <v-card-media :src="require('@/static/bg/8.jpg')" height="250">
+            <v-card-media :src="require('@/static/avatar/man_1.jpg')" height="250">
               <h2 class="white--text pa-3">
                 Card with image
               </h2>
@@ -69,14 +69,14 @@
         </v-flex>
         <v-flex lg4 sm12>
           <v-card>
-            <v-card-media :src="require('@/static/nature/n3.jpeg')" height="250">
+            <v-card-media :src="require('@/static/avatar/man_1.jpg')" height="250">
               <h2 class="white--text pa-3">
                 Card with image
               </h2>
             </v-card-media>
             <v-card-text>
               <v-avatar size="64px" class="right mt-56">
-                <img src="@/static/avatar/man_2.jpg" alt="">
+                <img src="@/static/avatar/man_1.jpg" alt="">
               </v-avatar>
               <div>
                 {{cardText}}
@@ -90,7 +90,7 @@
         </v-flex>
         <v-flex lg4 sm12>
           <v-card>
-            <v-card-media :src="require('@/static/nature/n4.jpeg')" height="250">
+            <v-card-media :src="require('@/static/avatar/man_1.jpg')" height="250">
               <h2 class="white--text pa-3">
                 Card with image
               </h2>

@@ -3,7 +3,7 @@
     <template>
       <v-app id="inspire" class="app">
         <!-- <app-drawer class="app--drawer"></app-drawer> -->
-        <app-toolbar class="app--toolbar"></app-toolbar>
+        <individual-app-toolbar class="app--toolbar"></individual-app-toolbar>
         <v-content>
           <!-- Page Header -->
           <page-header></page-header>
@@ -61,6 +61,7 @@
 <script>
   import AppDrawer from '@/components/AppDrawer'
   import AppToolbar from '@/components/AppToolbar'
+  import IndividualAppToolbar from '@/components/IndividualAppToolbar'
   import AppFab from '@/components/AppFab'
   import PageHeader from '@/components/PageHeader'
   // import ThemeSettings from '@/components/ThemeSettings'
@@ -68,7 +69,7 @@
   export default {
     components: {
       AppDrawer,
-      AppToolbar,
+      IndividualAppToolbar,
       AppFab,
       PageHeader,
       // ThemeSettings

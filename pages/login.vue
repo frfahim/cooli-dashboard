@@ -83,11 +83,12 @@
           .then(res => {
             this.wrongCredential = false;
             console.log(res.data.user);
-            if (res.data.user.is_verified) {
-              this.$router.push('/parcel/list');
-            } else {
-              this.$router.push('/profile');
-            }
+            this.$router.push('/parcel/list');
+            // if (res.data.user.is_verified) {
+            //   this.$router.push('/parcel/list');
+            // } else {
+            //   this.$router.push('/profile');
+            // }
             this.loading = false;
           })
           .catch( err => {

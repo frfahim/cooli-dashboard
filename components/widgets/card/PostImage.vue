@@ -1,7 +1,7 @@
 <template>
   <v-card>
 
-    <v-card-media src="/static/nature/n3.jpeg" class="white--text">
+    <v-card-media src="../../../static/avatar/man_1.jpg" class="white--text">
     <v-card-text>
  
     <v-divider></v-divider>

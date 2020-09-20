@@ -5,13 +5,13 @@
         <v-flex lg12>
           <v-widget title="Default">
             <div slot="widget-content" class="text-xs-center">
-              <v-parallax :src="require('@/static/bg/12.jpg')">
+              <v-parallax :src="require('@/static/avatar/man_1.jpg')">
               </v-parallax>
             </div>
           </v-widget>
           <v-widget title="Content inside" class="mt-3">
             <div slot="widget-content" class="text-xs-center">
-              <v-parallax :src="require('@/static/bg/1.jpg')">
+              <v-parallax :src="require('@/static/avatar/man_1.jpg')">
                 <v-layout column align-center justify-center>
                   <h1 class="white--text">Vuetify.js</h1>
                   <h4 class="white--text">Build your application today!</h4>
@@ -22,7 +22,7 @@
           <v-widget title="Jumbotron inside" class="mt-3">
             <div slot="widget-content" class="text-xs-center">
               <v-parallax
-                :src="require('@/static/bg/21.jpg')"
+                :src="require('@/static/avatar/man_1.jpg')"
                 height="700"
                 jumbotron
               ></v-parallax>

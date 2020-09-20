@@ -36,16 +36,16 @@
       return {
         items: [
           {
-            src: require('@/static/nature/n1.jpeg')
+            src: require('@/static/avatar/man_1.jpg')
           },
           {
-            src: require('@/static/nature/n2.jpeg')
+            src: require('@/static/avatar/man_1.jpg')
           },
           {
-            src: require('@/static/nature/n3.jpeg')
+            src: require('@/static/avatar/man_1.jpg')
           },
           {
-            src: require('@/static/nature/n4.jpeg')
+            src: require('@/static/avatar/man_1.jpg')
           }
         ]
       };
