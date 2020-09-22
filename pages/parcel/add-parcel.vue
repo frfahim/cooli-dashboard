@@ -46,7 +46,7 @@
 
     asyncData (context) {
       context.store.commit('setLoading')
-      return context.store.dispatch('orders/fetchZones')
+      return context.store.dispatch('orders/fetchZones', {'page_size': 'all'})
         .then( res => {
           context.store.commit('removeLoading')
           return {

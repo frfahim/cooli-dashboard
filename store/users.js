@@ -83,6 +83,7 @@ export const actions = {
         .$get(`/customers/me/details/`)
         .then(res => {
             // vuexContext.commit("addMeUserData", res.data);
+            localStorage.setItem("meData", JSON.stringify(res.data))
             return res.data;
         })
         .catch(err => {

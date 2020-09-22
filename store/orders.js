@@ -60,9 +60,11 @@ export const actions = {
   //             throw new Error(err);
   //         });
   // },
-  async fetchZones(vuexContext) {
+  async fetchZones(vuexContext, params) {
     return await this.$axios
-      .$get(`/orders/zones/`)
+      .$get(`/orders/zones/`, {
+        params: params
+      })
       .then(res => {
           return res.data;
       })

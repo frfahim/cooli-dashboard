@@ -313,7 +313,7 @@ export default {
     formHasErrors: false,
     productTypes: ProductTypes,
     formModel: {
-      'pickupDate': new Date().toISOString().substr(0, 10),
+      'pickupDate': null,
       'pickupTime': null,
       'excepted_delivery_date': null,
       'excepted_delivery_time': null,
@@ -330,7 +330,7 @@ export default {
       return this.meData.name
     },
   },
-  mounted () {
+  created () {
     const meData = JSON.parse(localStorage.getItem("meData"))
     if (meData) {
       this.formModel.requestor_name = meData.name;

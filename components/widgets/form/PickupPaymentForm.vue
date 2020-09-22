@@ -52,6 +52,7 @@
 <script>
 export default {
   data: () => ({
+    // pickup_address: '',
     errorMessages: [],
     loading: false,
     formHasErrors: false,
@@ -89,6 +90,13 @@ export default {
       },
     ],
   }),
+  // computed: {
+  //   pickup_address () {
+  //     // get() {
+  //       return this.$store.state.users.meData.pickup_address
+  //     // }
+  //   }
+  // },
 
   created () {
     this.getCompanyInfo()
@@ -99,7 +107,7 @@ export default {
 
     getZones () {
       this.$store.commit('setLoading')
-      this.$store.dispatch('orders/fetchZones')
+      this.$store.dispatch('orders/fetchZones', {'page_size': 'all'})
         .then( res => {
           this.$store.commit('removeLoading')
           this.zoneList = res.results
