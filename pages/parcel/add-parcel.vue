@@ -2,7 +2,7 @@
   <div id="page-forms">
     <v-container grid-list-xl fluid>
       <v-layout row wrap justify-center>
-        <v-flex lg8>
+        <v-flex lg10>
           <v-card>
 
             <v-toolbar color="teal" dark flat dense cad>

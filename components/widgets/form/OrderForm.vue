@@ -129,7 +129,37 @@
       </v-layout>
 
       <v-layout row wrap>
-        <v-flex sm6 lg6>
+      <v-flex lg4>
+          <v-select
+            label="Service"
+            placeholder="Select..."
+            :items="services"
+            v-model="formModel.service"
+            item-text="name"
+            item-value="id"
+            @input="formModel.product_weight=1"
+          ></v-select>
+        </v-flex>
+        <v-flex lg4>
+          <v-text-field
+            :label="getWeightLabel"
+            v-model="formModel.product_weight"
+            type="number"
+            :rules="[rules.required]"
+          ></v-text-field>
+        </v-flex>
+        <v-flex lg4>
+          <v-text-field
+            label="Delivery Charge"
+            :value="getServicePrice"
+            type="number"
+            readonly
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
+
+      <v-layout row wrap>
+        <v-flex sm4 lg4>
           <v-text-field
             label="Invoice number"
             placeholder=""
@@ -137,7 +167,7 @@
             :error-messages="errorMessages"
           ></v-text-field>
         </v-flex>
-        <v-flex sm6 lg6>
+        <v-flex sm4 lg4>
           <v-text-field
             label="Invoice value"
             placeholder=""
@@ -145,9 +175,6 @@
             :error-messages="errorMessages"
           ></v-text-field>
         </v-flex>
-      </v-layout>
-
-      <v-layout row wrap>
         <v-flex sm4 lg4>
           <v-text-field
             label="Collection Amount"
@@ -156,24 +183,18 @@
             :error-messages="errorMessages"
           ></v-text-field>
         </v-flex>
-        <v-flex sm4 lg4>
-          <v-text-field
-            label="Product Amount"
-            placeholder=""
-            v-model="formModel.amount"
-            :error-messages="errorMessages"
-          ></v-text-field>
-        </v-flex>
-        <v-flex sm4 lg4>
-          <v-text-field
-            label="Amount With Delivery Charge"
-            placeholder=""
-            v-model="formModel.total_amount"
-            :rules="[rules.required]"
-            :error-messages="errorMessages"
-          ></v-text-field>
-        </v-flex>
       </v-layout>
+
+      <!-- <v-layout row wrap>
+        <v-flex sm4 lg4>
+          <v-text-field
+            label="Collection Amount"
+            placeholder=""
+            v-model="formModel.cash_amount"
+            :error-messages="errorMessages"
+          ></v-text-field>
+        </v-flex>
+      </v-layout> -->
 
       <v-subheader class="pa-0 mb-3 mt-3">RECIPIENT INFORMATION</v-subheader>
 
@@ -303,6 +324,8 @@
 
 <script>
 import ProductTypes from '@/api/product_types';
+import { packageServices } from "@/api/prices";
+
 export default {
   data: () => ({
     errorMessages: [],
@@ -317,18 +340,33 @@ export default {
       'pickupTime': null,
       'excepted_delivery_date': null,
       'excepted_delivery_time': null,
+      'product_weight': 1,
+      'service': packageServices[0],
     },
     meData: JSON.parse(localStorage.getItem("meData")),
     rules: {
       required: value => !!value || 'This field is required.',
       phone: value => value && value.length <= 11 || 'Max 11 characters',
     },
-    nearest_zones: [{'id': 1, 'name': 'Dhanmondi'}, {'id': 2, 'name': 'Mohammadpur'}, {'id': 3, 'name': 'Shyamoli'}],
+    services: packageServices,
+    weightLabels: {'regular': 'Weight (KG)', 'food': 'Small/Medium Box', 'book': 'Books'},
   }),
   computed:  {
     getName () {
       return this.meData.name
     },
+    getWeightLabel () {
+      let service = this.findServiceObject(this.formModel.service)
+      return this.weightLabels[service.group]
+    },
+    getServicePrice () {
+      let currentService = this.findServiceObject(this.formModel.service)
+      let price = currentService.base_price
+      if (this.formModel.product_weight > currentService.base_unit) {
+        price = price + (currentService.unit_price * (this.formModel.product_weight - currentService.base_unit))
+      }
+      return price
+    }
   },
   created () {
     const meData = JSON.parse(localStorage.getItem("meData"))
@@ -349,6 +387,13 @@ export default {
   },
 
   methods: {
+    findServiceObject (service) {
+      let serviceObj = service
+      if (typeof(service) != 'object') {
+        serviceObj = this.services.find(x => x.id === service);
+      }
+      return serviceObj
+    },
     submit () {
       console.log(this.formModel)
       const payload = {}
@@ -358,8 +403,12 @@ export default {
       if (typeof payload.requestor_zone === 'object') {
         payload.requestor_zone = payload.requestor_zone.id
       }
-      payload['pickup_date'] = `${this.formModel['pickupDate']}T${this.formModel['pickupTime']}`
-      payload['delivery_date'] = `${this.formModel['excepted_delivery_date']}T${this.formModel['excepted_delivery_time']}`
+      if (this.formModel.pickupDate) {
+        payload['pickup_date'] = `${this.formModel['pickupDate']}T${this.formModel['pickupTime']}`
+      }
+      if (this.formModel.excepted_delivery_date) {
+        payload['delivery_date'] = `${this.formModel['excepted_delivery_date']}T${this.formModel['excepted_delivery_time']}`
+      }
       console.log(payload);
 
 
