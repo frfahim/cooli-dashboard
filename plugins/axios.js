@@ -21,7 +21,7 @@ export default function({ $axios, $router, redirect, store }) {
     function(error) {
       const originalRequest = error.config;
 
-      if (error.response.status === 401 && originalRequest.url === "accounts/refresh-token/") {
+      if (error.response.status === 401 && originalRequest.url === "users/auth/token/refresh/") {
         store.dispatch("clearUserData")
         return Promise.reject(error)
       }

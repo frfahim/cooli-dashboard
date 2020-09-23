@@ -95,6 +95,16 @@ export const actions = {
         throw new Error(err);
       });
   },
+  async deleteOrder(vuexContext, orderUUID) {
+    return await this.$axios
+      .$delete(`/orders/${orderUUID}/`)
+      .then(res => {
+        return res;
+      })
+      .catch(error => {
+        throw new Error(err);
+      });
+  },
 };
 
 export const getters = {};

@@ -67,6 +67,7 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/axios',
+    'vue-sweetalert2/nuxt',
   ],
   axios: {
     baseURL: baseApiUrl

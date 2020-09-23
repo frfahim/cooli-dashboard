@@ -32,10 +32,10 @@
               </v-chip>
             </td>
             <td class="text-xs-right">
-              <v-btn flat icon color="grey">
+              <!-- <v-btn flat icon color="grey">
                 <v-icon>edit</v-icon>
-              </v-btn>
-              <v-btn flat icon color="grey">
+              </v-btn> -->
+              <v-btn flat icon color="grey" @click="openAlert(props.item.uuid)">
                 <v-icon>delete</v-icon>
               </v-btn>
             </td>
@@ -89,8 +89,35 @@
       this.getOrderList()
     },
     methods: {
-      handleClick: (e) => {
-        console.log(e);
+      openAlert (orderUUID) {
+        this.$swal({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$store.dispatch('orders/deleteOrder', orderUUID)
+              .then( res => {
+                this.getOrderList()
+                this.$swal(
+                  'Deleted!',
+                  'Your parcel is deleted.',
+                  'success'
+                )
+              })
+              .catch(err => {
+                this.$swal(
+                  'Failed!',
+                  "Something wen wrong",
+                  'error'
+                )
+              })
+          }
+        })
       },
       getColorByStatus (status) {
         return this.colors[status];

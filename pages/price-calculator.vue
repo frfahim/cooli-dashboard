@@ -43,16 +43,18 @@
         </v-flex>
       </v-layout>
 
-      <v-card-text class=text-center>
-        <div class="text-center">
+      <v-card-text class="text-center">
+        <v-flex text-xs-center>
           <v-chip
-              class="ma-2"
-              color="orange"
-              x-large
-            >
-            {{getServicePrice}}
+            class="short"
+            color="orange"
+            x-large
+          >
+            <span>
+              {{getServicePrice}}
+            </span>
           </v-chip>
-        </div>
+        </v-flex>
       </v-card-text>
 
       <v-divider class="mt-4"></v-divider>
@@ -120,3 +122,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.short{
+  width:120px;
+  height: 65px;
+}
+.short span {
+    padding-left: 32px;
+    font-size: 25px;
+    font-weight: bold;
+}
+</style>
