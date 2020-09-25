@@ -14,7 +14,7 @@
                 <v-form>
                   <v-text-field
                     name="login"
-                    label="Username"
+                    label="Email/Phone/UserID"
                     type="text"
                     v-model="modelForm.username"
                     :rules="[rules.required]"
@@ -33,7 +33,7 @@
               </v-card-text>
               <v-card-actions>
               <p v-if="wrongCredential" class="routerLink mb-1 text-center">
-                  Wrong username or password!
+                  Wrong Credential!
               </p>
               </v-card-actions>
               <v-card-actions>
@@ -90,10 +90,12 @@
             //   this.$router.push('/profile');
             // }
             this.loading = false;
+            this.$toast.success(`Welcome, ${res.data.user.name}`)
           })
           .catch( err => {
             this.wrongCredential = true;
             this.loading = false;
+            this.$toast.error("Wrong Credential!")
           })
       },
     }

@@ -419,6 +419,7 @@ export default {
         this.$store.commit('removeLoading')
         this.$store.dispatch('setNotification', {type: 'success', msg: 'Catalog Created'});
         let token = localStorage.getItem("UserToken")
+        this.$toast.success("Parcel Added.")
         if (token) {
           this.$router.push('/parcel/list')
         } else {
@@ -427,6 +428,7 @@ export default {
       }).catch(error =>{
         this.$store.commit('removeLoading')
         this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
+        this.$toast.error("Something went wrong, please check required field!")
       })
     }
   }

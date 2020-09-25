@@ -26,6 +26,7 @@
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-quill-editor": "^3.0.6",
     "vue-sweetalert2": "^3.0.8",
+    "vue-toastification": "^1.7.8",
     "vuetify": "^1.4.4",
     "vuetify-loader": "^1.2.0"
   },

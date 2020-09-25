@@ -7,7 +7,7 @@
       // middleware: ['auth'],
       mounted()
       {
-        this.$router.push('/dashboard')
+        this.$router.push('/parcel/list')
       }
     }
 </script>

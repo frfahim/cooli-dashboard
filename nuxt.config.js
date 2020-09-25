@@ -68,9 +68,25 @@ module.exports = {
   modules: [
     '@nuxtjs/axios',
     'vue-sweetalert2/nuxt',
+    "vue-toastification/nuxt",
   ],
   axios: {
     baseURL: baseApiUrl
+  },
+  // https://maronato.github.io/vue-toastification/
+  toast: {
+    position: "top-right",
+    timeout: 2000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: true,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
   },
 
   /*

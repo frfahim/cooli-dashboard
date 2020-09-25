@@ -36,7 +36,7 @@
     <v-menu offset-y origin="center center" :nudge-right="140" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator">
         <v-avatar size="30px">
-          <img src="../static/avatar/user.jpg" alt="Michael Wang"/>
+          <img src="../static/avatar/user.jpg" alt="userData.name"/>
         </v-avatar>
       </v-btn>
       <v-list class="pa-0">
@@ -65,6 +65,7 @@
     },
     data:  function () {
       return {
+        userData: localStorage.getItem('User') || '',
         items: [
           {
             icon: 'account_circle',
