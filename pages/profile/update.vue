@@ -150,7 +150,6 @@
       })
       .catch(err => {
         this.meData = {}
-        this.store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
         this.store.commit('removeLoading')
       })
     },
@@ -166,7 +165,6 @@
         })
         .catch(err => {
           this.customerData = {}
-          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
           this.$store.commit('removeLoading')
           this.loading = false;
         })

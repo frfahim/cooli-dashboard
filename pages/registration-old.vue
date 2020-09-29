@@ -80,13 +80,11 @@
           .then(res => {
             this.loading = false;
             this.$store.commit('removeLoading')
-            this.$store.dispatch('setNotification', {type: 'success', msg: 'Account Created'});
             this.$router.push('/login');
           })
           .catch( err => {
             this.$store.commit('removeLoading')
             this.loading = false
-            this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
           })
       },
     }

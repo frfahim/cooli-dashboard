@@ -108,7 +108,6 @@ export default {
         this.formModel = {}
         this.$store.commit('removeLoading')
         this.loading = false
-        this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
       })
     },
 
@@ -131,7 +130,6 @@ export default {
       });
       if (this.formHasErrors) {
         this.loading = false
-        this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
         return
       }
 
@@ -141,12 +139,10 @@ export default {
       ).then(res => {
         this.$store.commit('removeLoading')
         this.loading = false
-        this.$store.dispatch('setNotification', {type: 'success', msg: 'Catalog Created'});
         // this.$router.push('/profile/update/')
       }).catch(error =>{
         this.$store.commit('removeLoading')
         this.loading = false
-        this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
       })
     },
 

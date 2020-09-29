@@ -62,7 +62,6 @@ export default {
           this.formModel = {}
           this.$store.commit('removeLoading')
           this.loading = false
-          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
         })
       },
 
@@ -81,7 +80,6 @@ export default {
         });
         if (this.formHasErrors) {
           this.loading = false
-          this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
           return
         }
 
@@ -91,13 +89,11 @@ export default {
         ).then(res => {
           this.$store.commit('removeLoading')
           this.loading = false
-          this.$store.dispatch('setNotification', {type: 'success', msg: 'Updated'});
           // this.$router.push('/profile/update/')
           // this.$emit('update:currentTab', 2)
         }).catch(error =>{
           this.$store.commit('removeLoading')
           this.loading = false
-          this.$store.dispatch('setNotification', {type: 'error', msg: 'Something wrong'});
         })
       },
     }

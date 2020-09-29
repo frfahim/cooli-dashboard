@@ -41,7 +41,15 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#e0290c'},
+  loading: {
+    color: 'yellow',
+    height: '3px'
+  },
+  loadingIndicator: {
+    name: 'chasing-dots',
+    color: '#3B8070',
+    background: 'white'
+  },
 
   /*
   ** Global CSS

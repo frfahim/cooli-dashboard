@@ -129,7 +129,6 @@
         })
         .catch(err => {
           this.customerData = {}
-          this.$store.dispatch('setNotification', {type: 'error', msg: 'Some thing wrong'});
           this.$store.commit('removeLoading')
         })
       }
