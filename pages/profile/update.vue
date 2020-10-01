@@ -3,7 +3,7 @@
     <v-container grid-list-xl fluid>
       <!-- <v-layout row wrap justify-center> -->
         <v-card v-if="Object.keys(meData).length">
-          <template v-slot:extension>
+          <template>
             <v-tabs
               v-model="tab"
               background-color="deep-purple accent-4"

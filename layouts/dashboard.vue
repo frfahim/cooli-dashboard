@@ -66,6 +66,7 @@
   // import ThemeSettings from '@/components/ThemeSettings'
 
   export default {
+    name: 'Default',
     components: {
       AppDrawer,
       AppToolbar,

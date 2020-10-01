@@ -141,12 +141,14 @@
           ></v-select>
         </v-flex>
         <v-flex lg4>
+          <ValidationProvider name="weight" :rules="`required|min_value: 1|max_value:${Number(formModel.service.limit)}`"  v-slot="{ errors }">
           <v-text-field
             :label="getWeightLabel"
             v-model="formModel.product_weight"
             type="number"
-            :rules="[rules.required]"
+            :error-messages="errors"
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
         <v-flex lg4>
           <v-text-field
@@ -325,6 +327,7 @@
 <script>
 import ProductTypes from '@/api/product_types';
 import { packageServices } from "@/api/prices";
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
   data: () => ({
@@ -351,6 +354,12 @@ export default {
     services: packageServices,
     weightLabels: {'regular': 'Weight (KG)', 'food': 'Small/Medium Box', 'book': 'Books'},
   }),
+
+  components: {
+      ValidationProvider,
+      ValidationObserver
+  },
+
   computed:  {
     getName () {
       return this.meData.name
@@ -408,6 +417,9 @@ export default {
       }
       if (this.formModel.excepted_delivery_date) {
         payload['delivery_date'] = `${this.formModel['excepted_delivery_date']}T${this.formModel['excepted_delivery_time']}`
+      }
+      if (this.formModel.service) {
+        payload.service_name = this.formModel.service.name
       }
       console.log(payload);
 

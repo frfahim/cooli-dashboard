@@ -34,11 +34,13 @@
       <notification-list></notification-list>
     </v-menu> -->
     <v-menu offset-y origin="center center" :nudge-right="140" :nudge-bottom="10" transition="scale-transition">
-      <v-btn icon large flat slot="activator">
-        <v-avatar size="30px">
-          <img src="../static/avatar/user.jpg" alt="userData.name"/>
-        </v-avatar>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn icon large flat v-on="on">
+          <v-avatar size="30px">
+            <img src="../static/avatar/user.jpg" alt="userData.name"/>
+          </v-avatar>
+        </v-btn>
+      </template>
       <v-list class="pa-0">
         <v-list-tile v-for="(item,index) in items" :to="!item.href ? { name: item.name } : null" :href="item.href"
                      @click="item.click" ripple="ripple" :disabled="item.disabled" :target="item.target" rel="noopener"

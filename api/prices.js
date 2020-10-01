@@ -129,7 +129,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 50,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 2,
@@ -137,7 +138,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 60,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 3,
@@ -145,7 +147,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 80,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 4,
@@ -153,7 +156,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 20,
     'base_price': 150,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 5,
@@ -161,7 +165,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 100,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 6,
@@ -169,7 +174,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 80,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 7,
@@ -177,7 +183,8 @@ const packageServices = [
     'base_unit': 1,
     'unit_price': 12,
     'base_price': 80,
-    'group': 'regular'
+    'group': 'regular',
+    'limit': 5,
   },
   {
     'id': 8,
@@ -185,7 +192,8 @@ const packageServices = [
     'base_unit': 3,
     'unit_price': 25,
     'base_price': 100,
-    'group': 'food'
+    'group': 'food',
+    'limit': 5,
   },
   {
     'id': 9,
@@ -193,7 +201,8 @@ const packageServices = [
     'base_unit': 2,
     'unit_price': 25,
     'base_price': 150,
-    'group': 'book'
+    'group': 'book',
+    'limit': 5,
   },
   {
     'id': 10,
@@ -201,7 +210,8 @@ const packageServices = [
     'base_unit': 2,
     'unit_price': 20,
     'base_price': 80,
-    'group': 'regular'
+    'group': 'book',
+    'limit': 5,
   },
 ]
 
