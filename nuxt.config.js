@@ -10,7 +10,7 @@ let baseApiUrl = development ? devAPI : prodAPI;
 
 
 module.exports = {
-  mode: 'spa',
+  ssr: false,
 
   /*
   ** Headers of the page
@@ -66,8 +66,8 @@ module.exports = {
   */
   plugins: [
     '@/plugins/vuetify',
-    '@/plugins/vee-validate',
     '@/plugins/axios',
+    '@/plugins/vee-validate',
   ],
 
   /*
@@ -101,7 +101,10 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    transpile: ['vuetify/lib'],
+    transpile: [
+      "vuetify/lib",
+      "vee-validate/dist/rules"
+    ],
     plugins: [new VuetifyLoaderPlugin()],
     loaders: {
       stylus: {

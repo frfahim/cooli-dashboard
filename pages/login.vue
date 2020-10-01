@@ -4,6 +4,7 @@
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4 lg4>
+            <ValidationObserver ref="loginForm" v-slot="{ invalid, validated, handleSubmit }">
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
@@ -12,13 +13,17 @@
                   <h4 class="flex mb-4 primary--text">Merchant Login</h4>
                 </div>
                 <v-form>
+                  <ValidationProvider name="username" rules="required" v-slot="{ errors, valid }">
                   <v-text-field
                     name="login"
                     label="Email/Phone/UserID"
                     type="text"
                     v-model="modelForm.username"
-                    :rules="[rules.required]"
+                    :error-messages="errors"
+                    required
                   ></v-text-field>
+                  </ValidationProvider>
+                  <ValidationProvider name="password" rules="required"  v-slot="{ errors, valid }">
                   <v-text-field
                     name="password"
                     label="Password"
@@ -27,8 +32,10 @@
                     :type="passwordVisible ? 'text' : 'password'"
                     @click:append="passwordVisible = !passwordVisible"
                     v-model="modelForm.password"
-                    :rules="[rules.required]"
+                    :error-messages="errors"
+                    required
                   ></v-text-field>
+                  </ValidationProvider>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -41,12 +48,18 @@
                   Register
                 </v-btn> -->
                 <!-- <v-spacer></v-spacer> -->
-                <v-btn large block color="primary" @click="login" :loading="loading">Login</v-btn>
+                <v-btn
+                  large block color="primary"
+                  @click="handleSubmit(login)"
+                  :loading="loading"
+                  :disabled="invalid || !validated"
+                >Login</v-btn>
               </v-card-actions>
               <v-card-text>
                   Don't have an account? <router-link class="routerLink font-weight-bold" to="/registration">Signup</router-link>
                 </v-card-text>
             </v-card>
+            </ValidationObserver>
           </v-flex>
         </v-layout>
       </v-container>
@@ -55,6 +68,10 @@
 </template>
 
 <script>
+import {
+  ValidationObserver,
+  ValidationProvider
+} from "vee-validate";
   export default {
     layout: 'default',
     data: () => ({
@@ -62,15 +79,20 @@
       wrongCredential: false,
       passwordVisible: false,
       modelForm: {},
-      rules: {
-        required: value => !!value || 'This field is required.',
-        phone: value => value && value.length <= 11 || 'Max 11 characters',
-        email: value => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        },
-      },
+      // rules: {
+      //   required: value => !!value || 'This field is required.',
+      //   phone: value => value && value.length <= 11 || 'Max 11 characters',
+      //   email: value => {
+      //     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      //     return pattern.test(value) || 'Invalid e-mail.'
+      //   },
+      // },
     }),
+
+    components: {
+      ValidationProvider,
+      ValidationObserver
+    },
 
     mounted () {
       this.$store.dispatch('clearUserData')
@@ -83,14 +105,14 @@
           .then(res => {
             this.wrongCredential = false;
             console.log(res.data.user);
+            this.loading = false;
+            this.$toast.success(`Welcome, ${res.data.user.name}`)
             this.$router.push('/parcel/list');
             // if (res.data.user.is_verified) {
             //   this.$router.push('/parcel/list');
             // } else {
             //   this.$router.push('/profile');
             // }
-            this.loading = false;
-            this.$toast.success(`Welcome, ${res.data.user.name}`)
           })
           .catch( err => {
             this.wrongCredential = true;
