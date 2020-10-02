@@ -141,7 +141,7 @@
           ></v-select>
         </v-flex>
         <v-flex lg4>
-          <ValidationProvider name="weight" :rules="`required|min_value: 1|max_value:${Number(formModel.service.limit)}`"  v-slot="{ errors }">
+          <ValidationProvider name="weight" :rules="`required|min_value: 1|max_value: ${getServiceLimit}`"  v-slot="{ errors }">
           <v-text-field
             :label="getWeightLabel"
             v-model="formModel.product_weight"
@@ -375,6 +375,10 @@ export default {
         price = price + (currentService.unit_price * (this.formModel.product_weight - currentService.base_unit))
       }
       return price
+    },
+    getServiceLimit () {
+      let currentService = this.findServiceObject(this.formModel.service)
+      return Number(currentService.limit)
     }
   },
   created () {

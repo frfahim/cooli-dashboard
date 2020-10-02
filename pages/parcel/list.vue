@@ -28,7 +28,7 @@
             <td class="text-xs-left">{{ props.item.total_amount }}</td>
             <td class="text-xs-left">
               <v-chip label small :color="getColorByStatus(props.item.status)" text-color="white" >
-                {{ props.item.status }}
+                {{ props.item.status_display }}
               </v-chip>
             </td>
             <td class="text-xs-right">
@@ -78,9 +78,13 @@
         ],
         orderList: [],
         colors: {
-            processing: 'blue',
-            sent: 'red',
-            delivered: 'green'
+            pending: 'grey',
+            accepted: 'blue',
+            rejected: 'red',
+            picked: 'teal',
+            in_hub: 'purple',
+            on_the_way: 'lime',
+            delivered: 'green',
         }
       };
     },
