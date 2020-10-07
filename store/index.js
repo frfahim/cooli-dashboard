@@ -58,7 +58,7 @@ export const actions = {
         return res;
       })
       .catch(error => {
-        throw new Error(err);
+        throw new Error(error);
       });
   },
   loginUser(vuexContext, authData) {

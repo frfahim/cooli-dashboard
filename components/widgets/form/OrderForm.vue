@@ -1,36 +1,40 @@
 <template>
+<ValidationObserver ref="regForm" v-slot="{ invalid, validated, handleSubmit }">
   <v-card ref="form">
     <v-card-text>
       <v-subheader class="pa-0 mb-3">PICKUP INFORMATION</v-subheader>
       <v-layout row wrap>
         <v-flex sm6 lg6>
+          <ValidationProvider name="requestor_name" rules="required" v-slot="{ errors }">
           <v-text-field
             label="Name"
             placeholder="Jhon Doe"
             v-model="formModel.requestor_name"
             :rules="[rules.required]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
         <v-flex sm6 lg6>
+          <ValidationProvider name="requestor_phone" rules="required|numeric|max:11" v-slot="{ errors }">
           <v-text-field
             label="Phone"
             placeholder="01712000000"
-            :rules="[rules.required, rules.phone]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
             v-model="formModel.requestor_phone"
             type="number"
             required
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
       </v-layout>
 
       <v-layout row wrap>
         <v-flex sm6 lg6>
+          <ValidationProvider name="requestor_zone" rules="required" v-slot="{ errors }">
           <v-autocomplete
             label="Pickup Area"
             placeholder="Select..."
-            :rules="[rules.required]"
             :items="zoneList"
             v-model="formModel.requestor_zone"
             required
@@ -38,16 +42,19 @@
             item-value="id"
             item-text="name"
             :menu-props="{ top: true, }"
+            :error-messages="errors"
           ></v-autocomplete>
+          </ValidationProvider>
         </v-flex>
         <v-flex sm6 lg6>
+          <ValidationProvider name="requestor_address" rules="required" v-slot="{ errors }">
           <v-text-field
             label="Pickup Address"
             placeholder=""
             v-model="formModel.requestor_address"
-            :rules="[rules.required]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
       </v-layout>
 
@@ -62,13 +69,16 @@
             width="290px"
             :return-value.sync="formModel.pickupDate"
           >
+            <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              slot="activator"
+              v-on="on"
+              v-bind="attrs"
               label="Pickup Date"
               v-model="formModel.pickupDate"
               append-icon="event"
               readonly
             ></v-text-field>
+            </template>
             <v-date-picker color="green lighten-1" header-color="red" v-model="formModel.pickupDate" scrollable>
               <v-spacer></v-spacer>
               <v-btn flat color="primary" @click="pickupDateModal = false">Cancel</v-btn>
@@ -87,13 +97,16 @@
             width="290px"
             :return-value.sync="formModel.pickupTime"
           >
+            <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              slot="activator"
+              v-on="on"
+              v-bind="attrs"
               label="Pickup Time"
               v-model="formModel.pickupTime"
               append-icon="access_time"
               readonly
             ></v-text-field>
+            </template>
             <v-time-picker color="green lighten-1" header-color="red" v-model="formModel.pickupTime" scrollable>
               <v-spacer></v-spacer>
               <v-btn flat color="primary" @click="pickupTimeModal = false">Cancel</v-btn>
@@ -106,6 +119,7 @@
 
       <v-layout row wrap>
         <v-flex sm6 lg6>
+          <ValidationProvider name="product_type" rules="required" v-slot="{ errors }">
           <v-select
             :items="productTypes"
             v-model="formModel.product_type"
@@ -114,7 +128,9 @@
             required
             item-text="value"
             item-value="name"
+            :error-messages="errors"
           ></v-select>
+          </ValidationProvider>
         </v-flex>
         <v-flex sm6 lg6>
           <v-textarea
@@ -130,6 +146,7 @@
 
       <v-layout row wrap>
       <v-flex lg4>
+        <ValidationProvider name="service" rules="required" v-slot="{ errors }">
           <v-select
             label="Service"
             placeholder="Select..."
@@ -138,7 +155,9 @@
             item-text="name"
             item-value="id"
             @input="formModel.product_weight=1"
+            :error-messages="errors"
           ></v-select>
+        </ValidationProvider>
         </v-flex>
         <v-flex lg4>
           <ValidationProvider name="weight" :rules="`required|min_value: 1|max_value: ${getServiceLimit}`"  v-slot="{ errors }">
@@ -204,49 +223,54 @@
 
       <v-layout row wrap>
         <v-flex sm6 lg6>
+          <ValidationProvider name="receiver_name" rules="required" v-slot="{ errors }">
           <v-text-field
             label="Recipient Name"
             placeholder="Jhon Doe"
             v-model="formModel.receiver_name"
-            :rules="[rules.required]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
         <v-flex sm6 lg6>
+          <ValidationProvider name="receiver_phone" rules="required|numeric|max:11" v-slot="{ errors }">
           <v-text-field
             label="Phone"
             placeholder="01712000000"
-            :rules="[rules.required, rules.phone]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
             v-model="formModel.receiver_phone"
             type="number"
             required
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
       </v-layout>
 
       <v-layout row wrap>
         <v-flex sm6 lg6>
+          <ValidationProvider name="receiver_zone" rules="required" v-slot="{ errors }">
           <v-autocomplete
             label="Delivery Area"
             placeholder="Select..."
-            :rules="[rules.required]"
             :items="zoneList"
             :menu-props="{ top: true, }"
             v-model="formModel.receiver_zone"
             item-value="id"
             item-text="name"
             required
+            :error-messages="errors"
           ></v-autocomplete>
+          </ValidationProvider>
         </v-flex>
         <v-flex sm6 lg6>
+          <ValidationProvider name="receiver_address" rules="required" v-slot="{ errors }">
           <v-text-field
             label="Delivery Address"
             placeholder=""
             v-model="formModel.receiver_address"
-            :rules="[rules.required]"
-            :error-messages="errorMessages"
+            :error-messages="errors"
           ></v-text-field>
+          </ValidationProvider>
         </v-flex>
       </v-layout>
 
@@ -261,13 +285,16 @@
             width="290px"
             :return-value.sync="formModel.excepted_delivery_date"
           >
+            <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              slot="activator"
+              v-on="on"
+              v-bind="attrs"
               label="Excepted Delivery Date"
               v-model="formModel.excepted_delivery_date"
               append-icon="event"
               readonly
             ></v-text-field>
+            </template>
             <v-date-picker color="green lighten-1" header-color="red" v-model="formModel.excepted_delivery_date" scrollable>
               <v-spacer></v-spacer>
               <v-btn flat color="primary" @click="deliveryDateModal = false">Cancel</v-btn>
@@ -286,13 +313,16 @@
             width="290px"
             :return-value.sync="formModel.excepted_delivery_time"
           >
+            <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              slot="activator"
+              v-on="on"
+              v-bind="attrs"
               label="Excepted Delivery Time"
               v-model="formModel.excepted_delivery_time"
               append-icon="access_time"
               readonly
             ></v-text-field>
+            </template>
             <v-time-picker color="green lighten-1" header-color="red" v-model="formModel.excepted_delivery_time" scrollable>
               <v-spacer></v-spacer>
               <v-btn flat color="primary" @click="deliveryTimeModal = false">Cancel</v-btn>
@@ -319,15 +349,22 @@
       <!-- <v-slide-x-reverse-transition>
       </v-slide-x-reverse-transition> -->
       <v-spacer></v-spacer>
-      <v-btn color="indigo" large @click="submit">Submit</v-btn>
+      <v-btn color="indigo" large @click="handleSubmit(submit)">Submit</v-btn>
     </v-card-actions>
   </v-card>
+</ValidationObserver>
 </template>
 
 <script>
 import ProductTypes from '@/api/product_types';
 import { packageServices } from "@/api/prices";
-import { ValidationObserver, ValidationProvider } from "vee-validate";
+import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
+import {required } from 'vee-validate/dist/rules'
+
+extend("required", {
+  ...required,
+  message: "This field is required"
+});
 
 export default {
   data: () => ({

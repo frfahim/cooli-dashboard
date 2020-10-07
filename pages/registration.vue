@@ -4,6 +4,7 @@
       <v-container grid-list-xl fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md8 lg8>
+            <ValidationObserver ref="regForm" v-slot="{ invalid, validated, handleSubmit }">
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
@@ -11,58 +12,68 @@
                   <h2 class="flex primary--text">Enxpress</h2>
                   <h4 class="flex pt-0 mb-2 primary--text">Merchant Registration</h4>
                 </div>
-                <v-form>
+                <v-form @submit.prevent="handleSubmit(submit)">
                   <v-layout row wrap>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="shop_name" rules="required" v-slot="{ errors }">
                       <v-text-field
-                        name="customer_name"
+                        name="shop_name"
                         label="Business/Shop Name"
                         type="text"
-                        :rules="[rules.required]"
                         v-model="customerForm.name"
+                        :error-messages="errors"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="shop_phone" rules="required|numeric|max:11" v-slot="{ errors }">
                       <v-text-field
-                        name="customer_phone"
+                        name="shop_phone"
                         label="Business Phone Number"
                         type="number"
-                        :rules="[rules.required, rules.phone]"
+                        :error-messages="errors"
                         v-model="customerForm.phone"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                   </v-layout>
 
                   <v-layout row wrap>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="name" rules="required" v-slot="{ errors }">
                       <v-text-field
                         name="name"
                         label="Owner's Name"
                         type="text"
-                        :rules="[rules.required]"
+                        :error-messages="errors"
                         v-model="userForm.name"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="phone" rules="required|numeric|max:11" v-slot="{ errors }">
                       <v-text-field
                         name="phone"
                         label="Business/Owners Phone Number"
                         type="number"
-                        :rules="[rules.required, rules.phone]"
+                        :error-messages="errors"
                         v-model="userForm.phone"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                   </v-layout>
 
                   <v-layout row wrap>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
                       <v-text-field
                         name="email"
                         label="Email"
                         type="text"
-                        :rules="[rules.required, rules.email]"
+                        :error-messages="errors"
                         v-model="userForm.email"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                     <v-flex sm6 lg6>
                       <v-text-field
@@ -74,40 +85,48 @@
                     </v-flex>
                   </v-layout>
 
+                  <ValidationProvider name="address" rules="required" v-slot="{ errors }">
                   <v-text-field
-                    name="customer_address"
+                    name="address"
                     label="Business/Shop Address"
                     type="text"
-                    :rules="[rules.required]"
+                    :error-messages="errors"
                     v-model="customerForm.address"
                   ></v-text-field>
+                  </ValidationProvider>
 
+                  <ValidationProvider name="payment" v-slot="{ errors }" rules="required">
                   <v-radio-group v-model="paymentMethod" row>
                     <v-radio label="Mobile(MFS)" value="mobile"></v-radio>
                     <v-radio label="Bank" value="bank"></v-radio>
                   </v-radio-group>
+                  <span class="error--text">{{ errors[0] }}</span>
+                  </ValidationProvider>
 
                   <template v-if="paymentMethod=='mobile'">
                     <v-layout row wrap>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="options" rules="required" v-slot="{ errors }">
                         <v-select
                           :items="MFSOptions"
                           v-model="paymentForm.payment_option"
                           label="Select an Provider"
-                          required
                           item-text="name"
                           item-value="value"
+                          :error-messages="errors"
                         ></v-select>
+                        </ValidationProvider>
                       </v-flex>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="phone" rules="required|numeric|max:11" v-slot="{ errors }">
                         <v-text-field
                           label="Mobile Account Number"
                           placeholder
                           v-model="paymentForm.phone_number"
                           type="number"
-                          :rules="[rules.required, rules.phone]"
-                          :error-messages="errorMessages"
+                          :error-messages="errors"
                         ></v-text-field>
+                        </ValidationProvider>
                       </v-flex>
                     </v-layout>
                   </template>
@@ -115,70 +134,76 @@
                   <template v-if="paymentMethod=='bank'">
                     <v-layout row wrap>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="bank_name" rules="required" v-slot="{ errors }">
                         <v-autocomplete
                           label="Bank"
                           placeholder="Select..."
-                          :rules="[rules.required]"
                           :items="banks"
                           v-model="paymentForm.bank_name"
                           ref="bank_name"
-                          required
+                          :error-messages="errors"
                         ></v-autocomplete>
+                        </ValidationProvider>
                       </v-flex>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="branch" rules="required" v-slot="{ errors }">
                         <v-text-field
                           label="Branch"
                           placeholder
                           v-model="paymentForm.branch"
-                          :rules="[rules.required]"
-                          :error-messages="errorMessages"
+                          :error-messages="errors"
                         ></v-text-field>
+                        </ValidationProvider>
                       </v-flex>
                     </v-layout>
 
                     <v-layout row wrap>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="routing_number" rules="required" v-slot="{ errors }">
                         <v-text-field
                           label="Routing No."
                           placeholder
                           v-model="paymentForm.routing_number"
-                          :rules="[rules.required]"
-                          :error-messages="errorMessages"
+                          :error-messages="errors"
                         ></v-text-field>
+                        </ValidationProvider>
                       </v-flex>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="account_type" rules="required" v-slot="{ errors }">
                         <v-autocomplete
                           label="A/C Type"
                           placeholder="Select..."
-                          :rules="[rules.required]"
                           :items="account_types"
                           v-model="paymentForm.account_type"
                           item-value="key"
                           item-text="name"
                           ref="country"
-                          required
+                          :error-messages="errors"
                         ></v-autocomplete>
+                        </ValidationProvider>
                       </v-flex>
                     </v-layout>
 
                     <v-layout row wrap>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="account_holder_name" rules="required" v-slot="{ errors }">
                         <v-text-field
                           label="A/C Holder Name"
                           placeholder
                           v-model="paymentForm.account_holder_name"
-                          :rules="[rules.required]"
-                          :error-messages="errorMessages"
+                          :error-messages="errors"
                         ></v-text-field>
+                        </ValidationProvider>
                       </v-flex>
                       <v-flex sm6 lg6>
+                        <ValidationProvider name="account_number" rules="required" v-slot="{ errors }">
                         <v-text-field
                           label="A/C No."
                           placeholder
                           v-model="paymentForm.account_number"
-                          :rules="[rules.required]"
-                          :error-messages="errorMessages"
+                          :error-messages="errors"
                         ></v-text-field>
+                        </ValidationProvider>
                       </v-flex>
                     </v-layout>
                   </template>
@@ -192,31 +217,35 @@
 
                   <v-layout row wrap>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="password" rules="required|password:@confirm_password" v-slot="{ errors }">
                       <v-text-field
                         name="password"
                         label="Password"
                         id="password1"
                         type="password"
-                        :rules="[rules.required]"
+                        :error-messages="errors"
                         v-model="userForm.password1"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                     <v-flex sm6 lg6>
+                      <ValidationProvider name="confirm_password" rules="required" v-slot="{ errors }">
                       <v-text-field
                         name="password2"
                         label="Confirm Password"
                         id="password2"
                         type="password"
-                        :rules="[rules.required]"
+                        :error-messages="errors"
                         v-model="userForm.password2"
                       ></v-text-field>
+                      </ValidationProvider>
                     </v-flex>
                   </v-layout>
 
                   <div d-inline-flex>
                     <div>
-                      <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" />
-                      <label for="vehicle1">
+                      <input type="checkbox" id="terms" name="terms" value="terms" />
+                      <label for="terms">
                         I agree with this
                         <b>
                           <a @click="termsDialog=true">Terms & Conditions</a>
@@ -224,7 +253,7 @@
                       </label>
                       <br />
                     </div>
-                    <v-dialog v-model="termsDialog" width="600px">
+                    <v-dialog v-if="termsDialog" v-model="termsDialog" width="600px">
                       <v-card>
                         <v-card-title>
                           <span class="headline">Terms & Conditions</span>
@@ -254,13 +283,14 @@
                   Register
                 </v-btn>-->
                 <!-- <v-spacer></v-spacer> -->
-                <v-btn large block color="primary" @click="submit" :loading="loading">Registration</v-btn>
+                <v-btn large block color="primary" @click="handleSubmit(submit)" :loading="loading">Registration</v-btn>
               </v-card-actions>
               <v-card-text>
                 Already have an account?
                 <router-link class="routerLink font-weight-bold" to="/login">Login</router-link>
               </v-card-text>
             </v-card>
+            </ValidationObserver>
           </v-flex>
         </v-layout>
       </v-container>
@@ -270,6 +300,14 @@
 
 <script>
 import banks from "@/api/banks";
+import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
+import {required } from 'vee-validate/dist/rules'
+
+extend("required", {
+  ...required,
+  message: "This field is required"
+});
+
 export default {
   layout: "default",
   data: () => ({
@@ -305,9 +343,14 @@ export default {
     account_types: [
       { key: "current", name: "Current" },
       { key: "savings", name: "Savings" },
-      { key: "fnd", name: "FND" },
+      { key: "snd", name: "SND" },
     ],
   }),
+
+  components: {
+      ValidationProvider,
+      ValidationObserver
+  },
 
   mounted() {
     this.$store.dispatch("clearAllData");
@@ -316,6 +359,12 @@ export default {
   methods: {
     submit() {
       this.loading = true;
+      if (!this.paymentMethod) {
+        this.$refs.form.setErrors({
+          payment: ['Select a payment option']
+        });
+        return
+      }
       if (this.paymentMethod == 'bank') {
         this.customerForm.payment_method = 'bank'
         this.paymentForm.payment_option = 'bank'
@@ -341,10 +390,12 @@ export default {
           this.loading = false;
           this.$store.commit("removeLoading");
           this.$router.push("/login");
+          this.$toast.success(`Registration Successful, ${res.data.user.name}`)
         })
         .catch((err) => {
           this.$store.commit("removeLoading");
           this.loading = false;
+          this.$toast.error("Something went wrong")
         });
     },
   },

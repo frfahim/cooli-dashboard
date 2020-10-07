@@ -1,4 +1,12 @@
-import { required, email, max, max_value, min_value } from "vee-validate/dist/rules";
+import {
+  required,
+  email,
+  max,
+  max_value,
+  min_value,
+  oneOf,
+  numeric,
+} from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 
 extend("required", {
@@ -23,4 +31,21 @@ extend("min_value", {
 extend("email", {
   ...email,
   message: "This {_field_} must be a valid email"
+});
+
+extend("oneOf", {
+  ...oneOf,
+  message: "This {_field_} must be a valid option"
+});
+extend("numeric", {
+  ...numeric,
+  message: "This {_field_} must be a number"
+});
+
+extend('password', {
+  params: ['target'],
+  validate(value, { target }) {
+    return value === target;
+  },
+  message: "Password doesn't match"
 });
