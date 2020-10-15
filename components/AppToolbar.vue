@@ -37,7 +37,7 @@
       <template v-slot:activator="{ on }">
         <v-btn icon large flat v-on="on">
           <v-avatar size="30px">
-            <img src="../static/avatar/user.jpg" alt="userData.name"/>
+            <img src="../static/avatar/user.jpg"  :alt="getUserName" @error="imgPlaceholder"/>
           </v-avatar>
         </v-btn>
       </template>
@@ -67,7 +67,7 @@
     },
     data:  function () {
       return {
-        userData: localStorage.getItem('User') || '',
+        userData: JSON.parse(localStorage.getItem('User')) || '',
         items: [
           {
             icon: 'account_circle',
@@ -95,6 +95,9 @@
     computed: {
       toolbarColor() {
         return this.$vuetify.options.extra.mainNav;
+      },
+      getUserName() {
+        return this.userData.name || ''
       }
     },
     methods: {
@@ -109,6 +112,9 @@
       },
       handleProfile() {
         this.$router.push('/profile')
+      },
+      imgPlaceholder(e) {
+          e.target.src = "https://via.placeholder.com/300"
       }
     }
   };

@@ -58,7 +58,7 @@ export const actions = {
         return res;
       })
       .catch(error => {
-        throw new Error(error);
+        return Promise.reject(error)
       });
   },
   loginUser(vuexContext, authData) {
@@ -76,7 +76,8 @@ export const actions = {
       vuexContext.dispatch("users/fetchMe")
       return result
     }).catch(e => {
-      throw new Error(e)
+      // throw new Error(e)
+      return Promise.reject(e);
     })
   },
 

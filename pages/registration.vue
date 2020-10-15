@@ -95,7 +95,7 @@
                   ></v-text-field>
                   </ValidationProvider>
 
-                  <ValidationProvider name="payment" v-slot="{ errors }" rules="required">
+                  <ValidationProvider vid="payment" name="Payment Option" v-slot="{ errors }" rules="required">
                   <v-radio-group v-model="paymentMethod" row>
                     <v-radio label="Mobile(MFS)" value="mobile"></v-radio>
                     <v-radio label="Bank" value="bank"></v-radio>
@@ -217,7 +217,7 @@
 
                   <v-layout row wrap>
                     <v-flex sm6 lg6>
-                      <ValidationProvider name="password" rules="required|password:@confirm_password" v-slot="{ errors }">
+                      <ValidationProvider vid="password1" name="password" rules="required|password:@confirm_password" v-slot="{ errors }">
                       <v-text-field
                         name="password"
                         label="Password"
@@ -229,7 +229,7 @@
                       </ValidationProvider>
                     </v-flex>
                     <v-flex sm6 lg6>
-                      <ValidationProvider name="confirm_password" rules="required" v-slot="{ errors }">
+                      <ValidationProvider vid="password2" name="confirm_password" rules="required" v-slot="{ errors }">
                       <v-text-field
                         name="password2"
                         label="Confirm Password"
@@ -359,12 +359,12 @@ export default {
   methods: {
     submit() {
       this.loading = true;
-      if (!this.paymentMethod) {
-        this.$refs.form.setErrors({
-          payment: ['Select a payment option']
-        });
-        return
-      }
+      // if (!this.paymentMethod) {
+      //   this.$refs.regForm.setErrors({
+      //     payment: ['Select a payment option']
+      //   });
+      //   return
+      // }
       if (this.paymentMethod == 'bank') {
         this.customerForm.payment_method = 'bank'
         this.paymentForm.payment_option = 'bank'
@@ -393,9 +393,11 @@ export default {
           this.$toast.success(`Registration Successful, ${res.data.user.name}`)
         })
         .catch((err) => {
+          console.log(err.response.data);
           this.$store.commit("removeLoading");
           this.loading = false;
           this.$toast.error("Something went wrong")
+          this.$refs.regForm.setErrors(err.response.data.data)
         });
     },
   },

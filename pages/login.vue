@@ -115,6 +115,7 @@ import {
             // }
           })
           .catch( err => {
+            console.log(err.response.data);
             this.wrongCredential = true;
             this.loading = false;
             this.$toast.error("Wrong Credential!")

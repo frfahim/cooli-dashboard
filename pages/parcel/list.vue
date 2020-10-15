@@ -135,7 +135,7 @@
         })
         .catch(err => {
           this.orderList = []
-          this.$store.dispatch('setNotificaation', {type: 'error', msg: 'Some thing wrong'});
+          // this.$store.dispatch('setNotificaation', {type: 'error', msg: 'Some thing wrong'});
           this.$store.commit('removeLoading')
         })
       }
